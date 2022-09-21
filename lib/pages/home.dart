@@ -50,12 +50,20 @@ class _HomeState extends State<Home> {
   }
 
   getQuiz() async {
+    print(chosenDifficulty);
     await QuizService().getQuizList(
       limit: numberOfQuestions.round(),
       categories: categories,
       difficulty: chosenDifficulty,
     );
   }
+
+  int segmentedControlGroupValue = 0;
+  final Map<int, Widget> myTabs = const <int, Widget>{
+    0: Padding(padding: EdgeInsets.all(15), child: Text("Easy")),
+    1: Padding(padding: EdgeInsets.all(15), child: Text("Medium")),
+    2: Padding(padding: EdgeInsets.all(15), child: Text("Hard")),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -128,39 +136,16 @@ class _HomeState extends State<Home> {
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                     const SizedBox(height: 10),
-                    Container(
-                      padding: EdgeInsets.zero,
-                      height: 42,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      ),
-                      child: ToggleButtons(
-                        direction: Axis.horizontal,
-                        onPressed: (int index) {
-                          setState(() {
-                            chosenDifficulty = difficultiesList[index];
-
-                            for (int i = 0;
-                                i < selectedDifficulty.length;
-                                i++) {
-                              selectedDifficulty[i] = i == index;
-                            }
-                          });
-                        },
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(8)),
-                        selectedBorderColor: Colors.red[700],
-                        selectedColor: Colors.white,
-                        fillColor: Colors.red[200],
-                        color: Colors.black,
-                        constraints: const BoxConstraints(
-                          minHeight: 40.0,
-                          minWidth: 80.0,
-                        ),
-                        isSelected: selectedDifficulty,
-                        children: difficulties,
-                      ),
+                    CupertinoSlidingSegmentedControl(
+                      backgroundColor: Colors.red[200]!,
+                      groupValue: segmentedControlGroupValue,
+                      children: myTabs,
+                      onValueChanged: (i) {
+                        setState(() {
+                          chosenDifficulty = difficultiesList[i!];
+                          segmentedControlGroupValue = i;
+                        });
+                      },
                     ),
                     const SizedBox(height: 20),
                     Text(
@@ -203,3 +188,38 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+
+// Container(
+//                       padding: EdgeInsets.zero,
+//                       height: 42,
+//                       decoration: const BoxDecoration(
+//                         color: Colors.white,
+//                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
+//                       ),
+//                       child: ToggleButtons(
+//                         direction: Axis.horizontal,
+//                         onPressed: (int index) {
+//                           setState(() {
+//                             chosenDifficulty = difficultiesList[index];
+//                             for (int i = 0;
+//                                 i < selectedDifficulty.length;
+//                                 i++) {
+//                               selectedDifficulty[i] = i == index;
+//                             }
+//                           });
+//                         },
+//                         borderRadius:
+//                             const BorderRadius.all(Radius.circular(8)),
+//                         selectedBorderColor: Colors.red[700],
+//                         selectedColor: Colors.white,
+//                         fillColor: Colors.red[200],
+//                         color: Colors.black,
+//                         constraints: const BoxConstraints(
+//                           minHeight: 40.0,
+//                           minWidth: 80.0,
+//                         ),
+//                         isSelected: selectedDifficulty,
+//                         children: difficulties,
+//                       ),
+//                     ),

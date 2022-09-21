@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MultiSelect extends StatefulWidget {
@@ -35,29 +36,32 @@ class _MultiSelectState extends State<MultiSelect> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return CupertinoAlertDialog(
       title: const Text('Select Topics'),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: widget.items
-              .map(
-                (item) => CheckboxListTile(
-                  activeColor: const Color(0XFFff512f),
-                  value: _selectedItems.contains(item),
-                  title: Text(item),
-                  controlAffinity: ListTileControlAffinity.leading,
-                  onChanged: (isChecked) => _itemChange(item, isChecked!),
-                ),
-              )
-              .toList(),
+      content: CupertinoScrollbar(
+        child: Material(
+          child: ListBody(
+            children: widget.items
+                .map(
+                  (item) => CheckboxListTile(
+                    activeColor: const Color(0XFFff512f),
+                    tileColor: const Color.fromARGB(255, 203, 203, 212),
+                    value: _selectedItems.contains(item),
+                    title: Text(item),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    onChanged: (isChecked) => _itemChange(item, isChecked!),
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ),
       actions: [
-        TextButton(
+        CupertinoDialogAction(
           onPressed: _cancel,
           child: const Text('Cancel'),
         ),
-        ElevatedButton(
+        CupertinoDialogAction(
           onPressed: _submit,
           child: const Text('Submit'),
         ),
