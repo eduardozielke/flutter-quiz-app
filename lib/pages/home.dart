@@ -185,11 +185,11 @@ class _HomeState extends State<Home> {
                 height: 45,
                 width: double.infinity,
                 child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStatePropertyAll(Colors.green[400]),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green[400],
+                    disabledBackgroundColor: Colors.black12,
                   ),
-                  onPressed: getQuiz,
+                  onPressed: numberOfQuestions != 0 ? getQuiz : null,
                   child: const Text(
                     'Play',
                     style: TextStyle(fontSize: 18),
