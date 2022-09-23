@@ -122,6 +122,7 @@ class _HomeState extends State<Home> {
                     ),
                     const SizedBox(height: 5),
                     Wrap(
+                      alignment: WrapAlignment.center,
                       spacing: 6,
                       children: categories
                           .map((e) => Chip(

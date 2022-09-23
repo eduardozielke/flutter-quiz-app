@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quiz_app/pages/home.dart';
+import 'package:flutter_quiz_app/pages/quiz.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
           primary: const Color(0XFFff512f),
         ),
       ),
-      home: const Home(),
+      home: Quiz(),
     );
   }
 }
