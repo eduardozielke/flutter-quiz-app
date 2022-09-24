@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_quiz_app/widgets/quiz_view.dart';
 
@@ -10,7 +12,29 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  int selectedPage = 0;
+  int currentPage = 0;
+  bool isAnswered = false;
+  List choosedAnswers = [];
+  var pagesWithFunc = [];
+
+  void setChoosedAnswers(choosed) {
+    choosedAnswers.add(choosed);
+    setState(() => isAnswered = true);
+    print(choosedAnswers.toString());
+  }
+
+  createPagesWithFunc() {
+    pagesWithFunc = List.from(widget.pages)
+      ..forEach((page) {
+        page.setChoosedAnswers = setChoosedAnswers;
+      });
+  }
+
+  @override
+  void initState() {
+    createPagesWithFunc();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +51,9 @@ class _QuizPageState extends State<QuizPage> {
           child: ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             child: LinearProgressIndicator(
-              value: selectedPage * 0.1,
+              value: currentPage * 0.1,
               valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-              backgroundColor: Colors.black26,
+              backgroundColor: Colors.black12,
             ),
           ),
         ),
@@ -56,7 +80,7 @@ class _QuizPageState extends State<QuizPage> {
           ),
           child: Column(
             children: [
-              Expanded(child: widget.pages.elementAt(selectedPage)),
+              Expanded(child: pagesWithFunc.elementAt(currentPage)),
               SizedBox(
                 height: 45,
                 width: widthMQ * 0.86,
@@ -65,11 +89,14 @@ class _QuizPageState extends State<QuizPage> {
                     backgroundColor: Colors.green[400],
                     disabledBackgroundColor: Colors.black12,
                   ),
-                  onPressed: () {
-                    setState(() {
-                      selectedPage++;
-                    });
-                  },
+                  onPressed: isAnswered
+                      ? () {
+                          setState(() {
+                            currentPage++;
+                            isAnswered = false;
+                          });
+                        }
+                      : null,
                   child: const Text(
                     'Next',
                     style: TextStyle(fontSize: 18),

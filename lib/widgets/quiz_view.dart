@@ -4,12 +4,14 @@ class QuizView extends StatelessWidget {
   final String question;
   final List<dynamic> answers;
   final String correctAnswer;
+  Function? setChoosedAnswers;
 
-  const QuizView({
+  QuizView({
     Key? key,
     required this.answers,
     required this.question,
     required this.correctAnswer,
+    this.setChoosedAnswers,
   }) : super(key: key);
 
   @override
@@ -44,15 +46,20 @@ class QuizView extends StatelessWidget {
           children: List.generate(
             answers.length,
             (index) {
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Center(
-                  child: Text(
-                    answers[index],
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 20),
+              return InkWell(
+                onTap: () {
+                  setChoosedAnswers!(answers[index]);
+                },
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Text(
+                      answers[index],
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 20),
+                    ),
                   ),
                 ),
               );
