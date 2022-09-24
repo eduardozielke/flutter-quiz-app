@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quiz_app/models/api_response.dart';
 import 'package:flutter_quiz_app/models/categories.dart';
+import 'package:flutter_quiz_app/models/quiz.dart';
+import 'package:flutter_quiz_app/pages/quiz.dart';
 import 'package:flutter_quiz_app/service/quiz_service.dart';
 import 'package:flutter_quiz_app/widgets/multi_select.dart';
+import 'package:flutter_quiz_app/widgets/quiz_view.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -15,22 +18,23 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<String> categories = [];
+  List<QuizView> pages = [];
+  late List<Quiz> apiResponse = [];
   double numberOfQuestions = 5;
-  var chosenDifficulty = 'easy';
-
+  String chosenDifficulty = 'easy';
+  int segmentedControlGroupValue = 0;
+  bool isLoading = false;
+  final List<bool> selectedDifficulty = <bool>[true, false, false];
   List<Widget> difficulties = const <Widget>[
     Text('Easy'),
     Text('Medium'),
     Text('Hard')
   ];
-
   List<String> difficultiesList = const [
     'easy',
     'medium',
     'hard',
   ];
-
-  final List<bool> selectedDifficulty = <bool>[true, false, false];
 
   void _showMultiSelect() async {
     final List<String> items = categoriesMap.keys.toList();
@@ -49,16 +53,17 @@ class _HomeState extends State<Home> {
     }
   }
 
-  getQuiz() async {
-    print(chosenDifficulty);
-    await QuizService().getQuizList(
+  getQuizzes() async {
+    var result = await QuizService().getQuizList(
       limit: numberOfQuestions.round(),
       categories: categories,
       difficulty: chosenDifficulty,
     );
+    if (!result.error) {
+      apiResponse = result.data as List<Quiz>;
+    }
   }
 
-  int segmentedControlGroupValue = 0;
   final Map<int, Widget> myTabs = const <int, Widget>{
     0: Padding(padding: EdgeInsets.all(15), child: Text("Easy")),
     1: Padding(padding: EdgeInsets.all(15), child: Text("Medium")),
@@ -175,11 +180,47 @@ class _HomeState extends State<Home> {
                     backgroundColor: Colors.green[400],
                     disabledBackgroundColor: Colors.black12,
                   ),
-                  onPressed: numberOfQuestions != 0 ? getQuiz : null,
-                  child: const Text(
-                    'Play',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  onPressed: numberOfQuestions != 0
+                      ? (() async {
+                          setState(() => isLoading = true);
+
+                          await getQuizzes();
+
+                          for (Quiz page in apiResponse) {
+                            var allAnswers = List.from(
+                                page.incorrectAnswers as Iterable<dynamic>);
+                            allAnswers.add(page.correctAnswer);
+
+                            setState(() => isLoading = false);
+
+                            pages.add(
+                              QuizView(
+                                question: page.question!,
+                                answers: allAnswers,
+                                correctAnswer: page.correctAnswer!,
+                              ),
+                            );
+                          }
+
+                          if (mounted) {
+                            Navigator.of(context)
+                                .push(
+                                  MaterialPageRoute(
+                                    builder: (_) => QuizPage(
+                                      pages: pages,
+                                    ),
+                                  ),
+                                )
+                                .then((_) => setState(() => pages = []));
+                          }
+                        })
+                      : null,
+                  child: isLoading
+                      ? const CircularProgressIndicator()
+                      : const Text(
+                          'Play',
+                          style: TextStyle(fontSize: 18),
+                        ),
                 ),
               )
             ],
@@ -189,38 +230,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-
-// Container(
-//                       padding: EdgeInsets.zero,
-//                       height: 42,
-//                       decoration: const BoxDecoration(
-//                         color: Colors.white,
-//                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
-//                       ),
-//                       child: ToggleButtons(
-//                         direction: Axis.horizontal,
-//                         onPressed: (int index) {
-//                           setState(() {
-//                             chosenDifficulty = difficultiesList[index];
-//                             for (int i = 0;
-//                                 i < selectedDifficulty.length;
-//                                 i++) {
-//                               selectedDifficulty[i] = i == index;
-//                             }
-//                           });
-//                         },
-//                         borderRadius:
-//                             const BorderRadius.all(Radius.circular(8)),
-//                         selectedBorderColor: Colors.red[700],
-//                         selectedColor: Colors.white,
-//                         fillColor: Colors.red[200],
-//                         color: Colors.black,
-//                         constraints: const BoxConstraints(
-//                           minHeight: 40.0,
-//                           minWidth: 80.0,
-//                         ),
-//                         isSelected: selectedDifficulty,
-//                         children: difficulties,
-//                       ),
-//                     ),

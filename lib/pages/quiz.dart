@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quiz_app/widgets/quiz_view.dart';
 
-class Quiz extends StatelessWidget {
-  Quiz({Key? key}) : super(key: key);
+class QuizPage extends StatefulWidget {
+  final List<QuizView> pages;
+  const QuizPage({Key? key, required this.pages}) : super(key: key);
 
-  final List<Widget> pages = [
-    QuizView(
-        answers: ['aaaaa', 'aaaaa', 'aaaaa'],
-        question: 'What is the capital city of Papua New Guinea?'),
-  ];
+  @override
+  State<QuizPage> createState() => _QuizPageState();
+}
+
+class _QuizPageState extends State<QuizPage> {
+  int selectedPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +19,16 @@ class Quiz extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         title: Container(
           margin: const EdgeInsets.symmetric(vertical: 20),
           width: double.infinity,
           height: 20,
-          child: const ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
             child: LinearProgressIndicator(
-              value: 0.7,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              value: selectedPage * 0.1,
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
               backgroundColor: Colors.black26,
             ),
           ),
@@ -53,18 +56,22 @@ class Quiz extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Expanded(child: pages[0]),
+              Expanded(child: widget.pages.elementAt(selectedPage)),
               SizedBox(
                 height: 45,
-                width: double.infinity,
+                width: widthMQ * 0.86,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green[400],
                     disabledBackgroundColor: Colors.black12,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      selectedPage++;
+                    });
+                  },
                   child: const Text(
-                    'Play',
+                    'Next',
                     style: TextStyle(fontSize: 18),
                   ),
                 ),

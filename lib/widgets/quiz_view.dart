@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class QuizView extends StatelessWidget {
   final String question;
-  final List<String> answers;
+  final List<dynamic> answers;
+  final String correctAnswer;
 
   const QuizView({
     Key? key,
     required this.answers,
     required this.question,
+    required this.correctAnswer,
   }) : super(key: key);
 
   @override
@@ -27,6 +29,7 @@ class QuizView extends StatelessWidget {
             child: Center(
               child: Text(
                 question,
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 20,
                 ),
@@ -34,12 +37,12 @@ class QuizView extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 50),
         GridView.count(
           shrinkWrap: true,
-          crossAxisCount: answers.length,
+          crossAxisCount: 2,
           children: List.generate(
-            4,
+            answers.length,
             (index) {
               return Card(
                 shape: RoundedRectangleBorder(
@@ -47,9 +50,9 @@ class QuizView extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    answers[0],
+                    answers[index],
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 25),
+                    style: const TextStyle(fontSize: 20),
                   ),
                 ),
               );
