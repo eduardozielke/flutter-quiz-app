@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_quiz_app/models/api_response.dart';
 import 'package:flutter_quiz_app/models/categories.dart';
 import 'package:flutter_quiz_app/models/quiz.dart';
 import 'package:flutter_quiz_app/pages/quiz.dart';

@@ -1,6 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_quiz_app/models/choices.dart';
+import 'package:flutter_quiz_app/pages/final_page.dart';
+import 'package:flutter_quiz_app/widgets/custom_page_route.dart';
 import 'package:flutter_quiz_app/widgets/quiz_view.dart';
 
 class QuizPage extends StatefulWidget {
@@ -14,13 +15,12 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   int currentPage = 0;
   bool isAnswered = false;
-  List choosedAnswers = [];
+  List<Choices> choosedAnswers = [];
   var pagesWithFunc = [];
 
-  void setChoosedAnswers(choosed) {
-    choosedAnswers.add(choosed);
+  void setChoosedAnswers(choosed, rightAnswer) {
+    choosedAnswers.add(Choices(choosed: choosed, rightAnswer: rightAnswer));
     setState(() => isAnswered = true);
-    print(choosedAnswers.toString());
   }
 
   createPagesWithFunc() {
@@ -91,6 +91,17 @@ class _QuizPageState extends State<QuizPage> {
                   ),
                   onPressed: isAnswered
                       ? () {
+                          if (currentPage == pagesWithFunc.length - 1) {
+                            Navigator.push(
+                              context,
+                              CustomPageRouteBuilder(
+                                widget: FinalPage(
+                                  choosedAnswers: choosedAnswers,
+                                ),
+                              ),
+                            );
+                            return;
+                          }
                           setState(() {
                             currentPage++;
                             isAnswered = false;
