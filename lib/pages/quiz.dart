@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quiz_app/models/choices.dart';
 import 'package:flutter_quiz_app/pages/final_page.dart';
+import 'package:flutter_quiz_app/themes/text_styles.dart';
 import 'package:flutter_quiz_app/widgets/custom_page_route.dart';
 import 'package:flutter_quiz_app/widgets/quiz_view.dart';
 
@@ -110,7 +111,7 @@ class _QuizPageState extends State<QuizPage> {
                       : null,
                   child: const Text(
                     'Next',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyles.playAndNext,
                   ),
                 ),
               )

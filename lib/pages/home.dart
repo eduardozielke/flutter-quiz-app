@@ -4,6 +4,7 @@ import 'package:flutter_quiz_app/models/categories.dart';
 import 'package:flutter_quiz_app/models/quiz.dart';
 import 'package:flutter_quiz_app/pages/quiz.dart';
 import 'package:flutter_quiz_app/service/quiz_service.dart';
+import 'package:flutter_quiz_app/themes/text_styles.dart';
 import 'package:flutter_quiz_app/widgets/multi_select.dart';
 import 'package:flutter_quiz_app/widgets/quiz_view.dart';
 
@@ -75,7 +76,7 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quizzes', style: TextStyle(fontSize: 30)),
+        title: const Text('Quizzes', style: TextStyles.appBarTitle),
         centerTitle: true,
         elevation: 0,
         backgroundColor: const Color(0XFFff512f),
@@ -154,7 +155,7 @@ class _HomeState extends State<Home> {
                     const SizedBox(height: 20),
                     Text(
                       'Number of questions ${numberOfQuestions.round().toString()}',
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                      style: TextStyles.label1,
                     ),
                     Slider(
                       value: numberOfQuestions,
@@ -217,7 +218,7 @@ class _HomeState extends State<Home> {
                       ? const CircularProgressIndicator()
                       : const Text(
                           'Play',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyles.playAndNext,
                         ),
                 ),
               )
