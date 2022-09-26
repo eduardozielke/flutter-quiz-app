@@ -6,6 +6,7 @@ import 'package:flutter_quiz_app/pages/quiz.dart';
 import 'package:flutter_quiz_app/service/quiz_service.dart';
 import 'package:flutter_quiz_app/themes/text_styles.dart';
 import 'package:flutter_quiz_app/widgets/multi_select.dart';
+import 'package:flutter_quiz_app/widgets/quiz_button.dart';
 import 'package:flutter_quiz_app/widgets/quiz_view.dart';
 
 class Home extends StatefulWidget {
@@ -22,6 +23,7 @@ class _HomeState extends State<Home> {
   double numberOfQuestions = 5;
   String chosenDifficulty = 'easy';
   int segmentedControlGroupValue = 0;
+  int selectedIndex = -1;
   bool isLoading = false;
   final List<bool> selectedDifficulty = <bool>[true, false, false];
   List<Widget> difficulties = const <Widget>[
@@ -171,57 +173,98 @@ class _HomeState extends State<Home> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 45,
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[400],
-                    disabledBackgroundColor: Colors.black12,
-                  ),
-                  onPressed: numberOfQuestions != 0
-                      ? (() async {
-                          setState(() => isLoading = true);
+              QuizButton(
+                buttonText: 'Play',
+                isLoading: isLoading,
+                disabled: numberOfQuestions != 0,
+                backgroundColor: Colors.green[400],
+                disabledBackgroundColor: Colors.black12,
+                onPressed: (() async {
+                  setState(() => isLoading = true);
 
-                          await getQuizzes();
+                  await getQuizzes();
 
-                          for (Quiz page in apiResponse) {
-                            var allAnswers = List.from(
-                                page.incorrectAnswers as Iterable<dynamic>);
-                            allAnswers.add(page.correctAnswer);
+                  for (Quiz page in apiResponse) {
+                    var allAnswers =
+                        List.from(page.incorrectAnswers as Iterable<dynamic>);
+                    allAnswers.add(page.correctAnswer);
 
-                            setState(() => isLoading = false);
+                    setState(() => isLoading = false);
 
-                            pages.add(
-                              QuizView(
-                                question: page.question!,
-                                answers: allAnswers,
-                                correctAnswer: page.correctAnswer!,
-                              ),
-                            );
-                          }
+                    pages.add(
+                      QuizView(
+                        question: page.question!,
+                        answers: allAnswers,
+                        correctAnswer: page.correctAnswer!,
+                        selectedIndex: selectedIndex,
+                      ),
+                    );
+                  }
 
-                          if (mounted) {
-                            Navigator.of(context)
-                                .push(
-                                  MaterialPageRoute(
-                                    builder: (_) => QuizPage(
-                                      pages: pages,
-                                    ),
-                                  ),
-                                )
-                                .then((_) => setState(() => pages = []));
-                          }
-                        })
-                      : null,
-                  child: isLoading
-                      ? const CircularProgressIndicator()
-                      : const Text(
-                          'Play',
-                          style: TextStyles.playAndNext,
-                        ),
-                ),
-              )
+                  if (mounted) {
+                    Navigator.of(context)
+                        .push(
+                          MaterialPageRoute(
+                            builder: (_) => QuizPage(
+                              pages: pages,
+                            ),
+                          ),
+                        )
+                        .then((_) => setState(() => pages = []));
+                  }
+                }),
+              ),
+              // SizedBox(
+              //   height: 45,
+              //   width: double.infinity,
+              //   child: ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: Colors.green[400],
+              //       disabledBackgroundColor: Colors.black12,
+              //     ),
+              //     onPressed: numberOfQuestions != 0
+              //         ? (() async {
+              //             setState(() => isLoading = true);
+
+              //             await getQuizzes();
+
+              //             for (Quiz page in apiResponse) {
+              //               var allAnswers = List.from(
+              //                   page.incorrectAnswers as Iterable<dynamic>);
+              //               allAnswers.add(page.correctAnswer);
+
+              //               setState(() => isLoading = false);
+
+              //               pages.add(
+              //                 QuizView(
+              //                     question: page.question!,
+              //                     answers: allAnswers,
+              //                     correctAnswer: page.correctAnswer!,
+              //                     selectedIndex: selectedIndex),
+              //               );
+              //             }
+
+              //             if (mounted) {
+              //               Navigator.of(context)
+              //                   .push(
+              //                     MaterialPageRoute(
+              //                       builder: (_) => QuizPage(
+              //                         pages: pages,
+              //                       ),
+              //                     ),
+              //                   )
+              //                   .then((_) => setState(() => pages = []));
+              //             }
+              //           })
+              //         : null,
+              //     child: isLoading
+              //         ? const CircularProgressIndicator()
+              //         : const Text(
+              //             'Play',
+              //             style: TextStyles.playAndNext,
+              //           ),
+              //   ),
+              // )
             ],
           ),
         ),

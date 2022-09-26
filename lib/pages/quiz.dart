@@ -3,6 +3,7 @@ import 'package:flutter_quiz_app/models/choices.dart';
 import 'package:flutter_quiz_app/pages/final_page.dart';
 import 'package:flutter_quiz_app/themes/text_styles.dart';
 import 'package:flutter_quiz_app/widgets/custom_page_route.dart';
+import 'package:flutter_quiz_app/widgets/quiz_button.dart';
 import 'package:flutter_quiz_app/widgets/quiz_view.dart';
 
 class QuizPage extends StatefulWidget {
@@ -82,39 +83,63 @@ class _QuizPageState extends State<QuizPage> {
           child: Column(
             children: [
               Expanded(child: pagesWithFunc.elementAt(currentPage)),
-              SizedBox(
-                height: 45,
+              QuizButton(
+                buttonText: 'Next',
                 width: widthMQ * 0.86,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[400],
-                    disabledBackgroundColor: Colors.black12,
-                  ),
-                  onPressed: isAnswered
-                      ? () {
-                          if (currentPage == pagesWithFunc.length - 1) {
-                            Navigator.push(
-                              context,
-                              CustomPageRouteBuilder(
-                                widget: FinalPage(
-                                  choosedAnswers: choosedAnswers,
-                                ),
-                              ),
-                            );
-                            return;
-                          }
-                          setState(() {
-                            currentPage++;
-                            isAnswered = false;
-                          });
-                        }
-                      : null,
-                  child: const Text(
-                    'Next',
-                    style: TextStyles.playAndNext,
-                  ),
-                ),
-              )
+                backgroundColor: Colors.green[400],
+                disabledBackgroundColor: Colors.black12,
+                disabled: isAnswered,
+                onPressed: () {
+                  if (currentPage == pagesWithFunc.length - 1) {
+                    Navigator.push(
+                      context,
+                      CustomPageRouteBuilder(
+                        widget: FinalPage(
+                          choosedAnswers: choosedAnswers,
+                        ),
+                      ),
+                    );
+                    return;
+                  }
+                  setState(() {
+                    currentPage++;
+                    isAnswered = false;
+                  });
+                },
+              ),
+              // SizedBox(
+              //   height: 45,
+              //   width: widthMQ * 0.86,
+              //   child: ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: Colors.green[400],
+              //       disabledBackgroundColor: Colors.black12,
+              //     ),
+              //     onPressed: isAnswered
+              //         ? () {
+              //             if (currentPage == pagesWithFunc.length - 1) {
+              //               Navigator.push(
+              //                 context,
+              //                 CustomPageRouteBuilder(
+              //                   widget: FinalPage(
+              //                     choosedAnswers: choosedAnswers,
+              //                   ),
+              //                 ),
+              //               );
+              //               return;
+              //             }
+              //             setState(() {
+              //               currentPage++;
+              //               isAnswered = false;
+              //             });
+              //           }
+              //         : null,
+              //     child: const Text(
+              //       'Next',
+              //       style: TextStyles.playAndNext,
+              //     ),
+              //   ),
+              // )
             ],
           ),
         ),
