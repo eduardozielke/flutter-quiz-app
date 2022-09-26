@@ -6,6 +6,7 @@ class QuizButton extends StatelessWidget {
     Key? key,
     this.isLoading = false,
     required this.onPressed,
+    this.textColor,
     required this.buttonText,
     this.disabled = false,
     this.style,
@@ -14,9 +15,10 @@ class QuizButton extends StatelessWidget {
     this.width = double.infinity,
   }) : super(key: key);
 
-  final bool isLoading;
-  final void Function()? onPressed;
   final String buttonText;
+  final void Function()? onPressed;
+  final Color? textColor;
+  final bool isLoading;
   final bool disabled;
   final ButtonStyle? style;
   final Color? backgroundColor;
@@ -41,7 +43,9 @@ class QuizButton extends StatelessWidget {
             ? const CircularProgressIndicator()
             : Text(
                 buttonText,
-                style: TextStyles.playAndNext,
+                style: textColor != null
+                    ? TextStyle(color: textColor)
+                    : TextStyles.playAndNext,
               ),
       ),
     );

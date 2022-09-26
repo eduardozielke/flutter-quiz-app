@@ -62,6 +62,7 @@ class _QuizViewState extends State<QuizView> {
                   widget.setChoosedAnswers!(
                     widget.answers[index],
                     widget.correctAnswer,
+                    widget.question,
                   );
                 },
                 child: Card(
@@ -95,7 +96,7 @@ class _QuizViewState extends State<QuizView> {
       if (rightAnswer) {
         return Colors.green;
       }
-      return Color(0XFF6a9eda);
+      return const Color(0XFF6a9eda);
     } else {
       Colors.white;
     }
